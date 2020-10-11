@@ -58,7 +58,7 @@ def navigation_edges(level, cell):
             newloc = cell + cord
             if newloc in level['spaces']:
                 if cord is bors[0] or bors[1] or bors[2] or bors[3]:
-                    edges.append(newloc, level['spaces'].get(newloc))
+                    edges.append(newlocl, level['spaces'].get(newloc))
                 else: # if is diagonal so we gotta do math
                     m = (0.5*sqrt(2) * level['spaces'].get(cell)) + (0.5*sqrt(2) * level['spaces'].get(newloc))
                     edges.append(newloc, m)
