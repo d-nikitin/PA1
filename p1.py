@@ -17,8 +17,28 @@ def dijkstras_shortest_path(initial_position, destination, graph, adj):
         Otherwise, return None.
 
     """
+    p_q = []
+    heappush(p_q,(0,initial_position))
+    visted = {}
+    cost = {}
+    visted[initial_position] = None
+    cost[initial_position] = 0
+    while not p_q == []:
+        current = heappop(p_q)
+        path = []
+        if current == destination:
+            while current is not None:
+                path.insert(current)
+                current = visted[current]
+            return path
+        for next_cell in navigation_edges(graph, current[1]):
+            if next_cell[0] not in cost or next_cell[1] < cost[next_cell[0]]:
+                cost[next_cell[0]] = next_cell[1]
+                heappush(p_q,(next_cell[1], next_cell[0]))
+                p_q.sort()
+                visted[next_cell[0]] = current
+    return None
     pass
-
 
 def dijkstras_shortest_path_to_all(initial_position, graph, adj):
     """ Calculates the minimum cost to every reachable cell in a graph from the initial_position.
@@ -31,6 +51,18 @@ def dijkstras_shortest_path_to_all(initial_position, graph, adj):
     Returns:
         A dictionary, mapping destination cells to the cost of a path from the initial_position.
     """
+    p_q = []
+    heappush(p_q,(0,initial_position))
+    cost = {}
+    cost[initial_position] = 0
+    while not p_q == []:
+        current = heappop(p_q)
+        for next_cell in navigation_edges(graph, current[1]):
+            if next_cell[0] not in cost or next_cell[1] < cost[next_cell[0]]:
+                cost[next_cell[0]] = next_cell[1]
+                heappush(p_q,(next_cell[1], next_cell[0]))
+                p_q.sort()
+    return cost
     pass
 
 
@@ -51,7 +83,7 @@ def navigation_edges(level, cell):
              ((1,1), 1.4142135623730951),
              ... ]
     """
-    if cell not in level['wall']:
+    if cell not in level['walls']:
         edges = []
         bors = [(1,0),(0,1),(-1,0),(0,-1),(1,1),(1,-1),(-1,1),(-1,-1)]
         for cord in bors:
@@ -63,6 +95,8 @@ def navigation_edges(level, cell):
                     m = (0.5*sqrt(2) * level['spaces'].get(cell)) + (0.5*sqrt(2) * level['spaces'].get(newloc))
                     edges.append(newloc, m)
         return edges
+    else: 
+        return []
     pass
 
 
